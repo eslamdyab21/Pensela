@@ -42,7 +42,7 @@ function createWindow() {
 	});
 	board.setAlwaysOnTop(true, "screen");
 	board.loadFile("board.html");
-	board.setResizable(false);
+	board.setResizable(true);
 
 	setTimeout(() => {
 		board.setSize(
@@ -367,11 +367,12 @@ app.commandLine.appendSwitch("enable-transparent-visuals");
 app.disableHardwareAcceleration();
 
 app.whenReady().then(() => {
+    // createWindow()
 	os.platform() == "linux" ? setTimeout(createWindow, 100) : createWindow();
 });
 
-app.on("activate", () => {
-	if (BrowserWindow.getAllWindows().length === 0) {
-		createWindow();
-	}
-});
+// app.on("activate", () => {
+// 	if (BrowserWindow.getAllWindows().length === 0) {
+// 		createWindow();
+// 	}
+// });

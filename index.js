@@ -4,13 +4,15 @@ const path = require("path");
 const fs = require("fs");
 const screenshot = require("screenshot-desktop");
 
-
+// Key bindings
 const mouse_mode_key_biding = 'Command+S'
 const draw_mode_key_biding = 'Command+A'
 const undo_mode_key_biding = 'Command+D'
 const format_mode_key_biding = 'Command+F'
 const strok_up_mode_key_biding = 'Command+UP'
 const strok_down_mode_key_biding = 'Command+DOWN'
+const close_mode_key_biding = 'Command+P'
+
 
 function createWindow() {
 	const board = new BrowserWindow({
@@ -141,6 +143,12 @@ function createWindow() {
 			app.quit();
 		}
 	});
+
+    // close shortcut
+    globalShortcut.register(close_mode_key_biding, () =>{
+        console.log('close')
+		app.quit()
+    })
 
 	ipcMain.on("resetBoard", () => {
 		board.webContents.send("resetBoard");

@@ -2,12 +2,13 @@ const { ipcRenderer } = require("electron");
 
 let boardState = {
 	col: "#b4deff",
-	strokeCol: "#b4deff",
+	// strokeCol: "#b4deff",
+    strokeCol:"#ff9ccd",
 	mode: "mouse",
 	bg: "#00000000",
 	before: [],
 	after: [],
-	strokeWidth: 2,
+	strokeWidth: 3,
 };
 
 ipcRenderer.on("setMode", (e, arg) => {

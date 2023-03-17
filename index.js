@@ -1,8 +1,18 @@
-const { app, BrowserWindow, ipcMain, screen } = require("electron");
+const { app, BrowserWindow, ipcMain, globalShortcut, screen } = require("electron");
 const os = require("os");
 const path = require("path");
 const fs = require("fs");
 const screenshot = require("screenshot-desktop");
+
+// Key bindings
+const mouse_mode_key_biding = 'Command+S'
+const draw_mode_key_biding = 'Command+A'
+const undo_mode_key_biding = 'Command+D'
+const format_mode_key_biding = 'Command+F'
+const strok_up_mode_key_biding = 'Command+UP'
+const strok_down_mode_key_biding = 'Command+DOWN'
+const close_mode_key_biding = 'Alt+P'
+
 
 function createWindow() {
 	const board = new BrowserWindow({
@@ -32,7 +42,7 @@ function createWindow() {
 	});
 	board.setAlwaysOnTop(true, "screen");
 	board.loadFile("board.html");
-	board.setResizable(false);
+	board.setResizable(true);
 
 	setTimeout(() => {
 		board.setSize(
@@ -134,15 +144,31 @@ function createWindow() {
 		}
 	});
 
+    // close shortcut
+    globalShortcut.register(close_mode_key_biding, () =>{
+        console.log('close')
+		app.quit()
+    })
+
 	ipcMain.on("resetBoard", () => {
 		board.webContents.send("resetBoard");
 	});
 	ipcMain.on("eraserMode", () => {
 		board.webContents.send("eraserMode");
 	});
+
+    // Here is normal mouse - assign shortcut 
 	ipcMain.on("setMode", (e, arg) => {
 		board.webContents.send("setMode", arg);
+        console.log('mouse')
 	});
+
+    // mouse mode shrtcut
+    globalShortcut.register(mouse_mode_key_biding, () =>{
+        // board.webContents.send("setMode", arg);
+        board.webContents.send("resetBoard");
+        console.log('mouse')
+    })
 
 	ipcMain.on("textMode", () => {
 		board.webContents.send("textMode");
@@ -192,9 +218,17 @@ function createWindow() {
 	ipcMain.on("drawStar", () => {
 		board.webContents.send("drawStar");
 	});
+    // Here is the listner for pressing on free hand -- put keybord shortcut here
 	ipcMain.on("drawFreehand", () => {
 		board.webContents.send("drawFreehand");
+        console.log('drawing')
 	});
+
+    // drawing shortcut
+    globalShortcut.register(draw_mode_key_biding, () =>{
+        board.webContents.send("drawFreehand");
+        console.log('drawing')
+    })
 
 	ipcMain.on("dragMode", () => {
 		board.webContents.send("setMode", "drag");
@@ -237,15 +271,29 @@ function createWindow() {
 		board.focus();
 	});
 
+    // Here is clearing the board - add shourtcut
 	ipcMain.on("clearBoard", () => board.webContents.send("clearBoard"));
+
+    // clearing shortcut
+    globalShortcut.register(format_mode_key_biding, () =>{
+        board.webContents.send("clearBoard");
+        console.log('clearing')
+    })
 
 	ipcMain.on("laserCursor", () => {
 		board.webContents.send("setMode", "laser");
 		board.webContents.send("laserCursor");
 	});
 
+    // Here is undo
 	ipcMain.on("undo", () => board.webContents.send("undo"));
 	ipcMain.on("redo", () => board.webContents.send("redo"));
+
+    // undo shortcut
+    globalShortcut.register(undo_mode_key_biding, () =>{
+        board.webContents.send("undo");
+        console.log('undo')
+    })
 
 	ipcMain.on("screenshot", () => {
 		let d = new Date();
@@ -280,12 +328,23 @@ function createWindow() {
 		board.webContents.send("screenshot");
 	});
 
+    // Here is stroke
 	ipcMain.on("strokeIncrease", () =>
 		board.webContents.send("strokeIncrease")
 	);
 	ipcMain.on("strokeDecrease", () =>
 		board.webContents.send("strokeDecrease")
 	);
+
+    // Strok shortcut
+    globalShortcut.register(strok_up_mode_key_biding, () =>{
+        board.webContents.send("strokeIncrease");
+        console.log('strokeIncrease')
+    })
+    globalShortcut.register(strok_down_mode_key_biding, () =>{
+        board.webContents.send("strokeDecrease");
+        console.log('strokeDecrease')
+    })
 
 	ipcMain.on("arrowSingle", () => board.webContents.send("arrowSingle"));
 	ipcMain.on("arrowDouble", () => board.webContents.send("arrowDouble"));
@@ -308,11 +367,12 @@ app.commandLine.appendSwitch("enable-transparent-visuals");
 app.disableHardwareAcceleration();
 
 app.whenReady().then(() => {
-	os.platform() == "linux" ? setTimeout(createWindow, 1000) : createWindow();
+    // createWindow()
+	os.platform() == "linux" ? setTimeout(createWindow, 100) : createWindow();
 });
 
-app.on("activate", () => {
-	if (BrowserWindow.getAllWindows().length === 0) {
-		createWindow();
-	}
-});
+// app.on("activate", () => {
+// 	if (BrowserWindow.getAllWindows().length === 0) {
+// 		createWindow();
+// 	}
+// });

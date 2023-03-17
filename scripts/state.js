@@ -2,12 +2,13 @@ const { ipcRenderer } = require("electron");
 
 let boardState = {
 	col: "#b4deff",
-	strokeCol: "#b4deff",
+	// strokeCol: "#b4deff",
+    strokeCol:"#ff9ccd",
 	mode: "mouse",
 	bg: "#00000000",
 	before: [],
 	after: [],
-	strokeWidth: 10,
+	strokeWidth: 3,
 };
 
 ipcRenderer.on("setMode", (e, arg) => {
@@ -23,9 +24,9 @@ ipcRenderer.on("colSelectStroke", (e, arg) => {
 });
 
 ipcRenderer.on("strokeIncrease", () => {
-	if (boardState.strokeWidth < 30) boardState.strokeWidth += 5;
+	if (boardState.strokeWidth < 30) boardState.strokeWidth += 2;
 });
 
 ipcRenderer.on("strokeDecrease", () => {
-	if (boardState.strokeWidth > 5) boardState.strokeWidth -= 5;
+	if (boardState.strokeWidth > 2) boardState.strokeWidth -= 2;
 });

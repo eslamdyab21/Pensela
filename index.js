@@ -7,6 +7,9 @@ const screenshot = require("screenshot-desktop");
 
 const mouse_mode_key_biding = 'Command+S'
 const draw_mode_key_biding = 'Command+A'
+const undo_mode_key_biding = 'Command+D'
+const format_mode_key_biding = 'Command+F'
+
 
 function createWindow() {
 	const board = new BrowserWindow({
@@ -259,15 +262,29 @@ function createWindow() {
 		board.focus();
 	});
 
+    // Here is clearing the board - add shourtcut
 	ipcMain.on("clearBoard", () => board.webContents.send("clearBoard"));
+
+    // clearing shortcut
+    globalShortcut.register(format_mode_key_biding, () =>{
+        board.webContents.send("clearBoard");
+        console.log('clearing')
+    })
 
 	ipcMain.on("laserCursor", () => {
 		board.webContents.send("setMode", "laser");
 		board.webContents.send("laserCursor");
 	});
 
+    // Here is undo
 	ipcMain.on("undo", () => board.webContents.send("undo"));
 	ipcMain.on("redo", () => board.webContents.send("redo"));
+
+    // undo shortcut
+    globalShortcut.register(undo_mode_key_biding, () =>{
+        board.webContents.send("undo");
+        console.log('cleundoring')
+    })
 
 	ipcMain.on("screenshot", () => {
 		let d = new Date();

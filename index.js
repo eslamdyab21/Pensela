@@ -367,7 +367,7 @@ app.commandLine.appendSwitch("enable-transparent-visuals");
 app.disableHardwareAcceleration();
 
 app.whenReady().then(() => {
-	os.platform() == "linux" ? setTimeout(createWindow, 1000) : createWindow();
+	os.platform() == "linux" ? setTimeout(createWindow, 100) : createWindow();
 });
 
 app.on("activate", () => {

@@ -9,7 +9,8 @@ const mouse_mode_key_biding = 'Command+S'
 const draw_mode_key_biding = 'Command+A'
 const undo_mode_key_biding = 'Command+D'
 const format_mode_key_biding = 'Command+F'
-
+const strok_up_mode_key_biding = 'Command+UP'
+const strok_down_mode_key_biding = 'Command+DOWN'
 
 function createWindow() {
 	const board = new BrowserWindow({
@@ -283,7 +284,7 @@ function createWindow() {
     // undo shortcut
     globalShortcut.register(undo_mode_key_biding, () =>{
         board.webContents.send("undo");
-        console.log('cleundoring')
+        console.log('undo')
     })
 
 	ipcMain.on("screenshot", () => {
@@ -319,12 +320,23 @@ function createWindow() {
 		board.webContents.send("screenshot");
 	});
 
+    // Here is stroke
 	ipcMain.on("strokeIncrease", () =>
 		board.webContents.send("strokeIncrease")
 	);
 	ipcMain.on("strokeDecrease", () =>
 		board.webContents.send("strokeDecrease")
 	);
+
+    // Strok shortcut
+    globalShortcut.register(strok_up_mode_key_biding, () =>{
+        board.webContents.send("strokeIncrease");
+        console.log('strokeIncrease')
+    })
+    globalShortcut.register(strok_down_mode_key_biding, () =>{
+        board.webContents.send("strokeDecrease");
+        console.log('strokeDecrease')
+    })
 
 	ipcMain.on("arrowSingle", () => board.webContents.send("arrowSingle"));
 	ipcMain.on("arrowDouble", () => board.webContents.send("arrowDouble"));

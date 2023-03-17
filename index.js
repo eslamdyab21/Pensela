@@ -148,12 +148,13 @@ function createWindow() {
     // Here is normal mouse - assign shortcut 
 	ipcMain.on("setMode", (e, arg) => {
 		board.webContents.send("setMode", arg);
-        // console.log('mouse')
+        console.log('mouse')
 	});
 
     // mouse mode shrtcut
     globalShortcut.register(mouse_mode_key_biding, () =>{
-        board.webContents.send("setMode", arg);
+        // board.webContents.send("setMode", arg);
+        board.webContents.send("resetBoard");
         console.log('mouse')
     })
 
@@ -214,7 +215,7 @@ function createWindow() {
     // drawing shortcut
     globalShortcut.register(draw_mode_key_biding, () =>{
         board.webContents.send("drawFreehand");
-        // console.log('drawing')
+        console.log('drawing')
     })
 
 	ipcMain.on("dragMode", () => {

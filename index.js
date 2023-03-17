@@ -1,8 +1,12 @@
-const { app, BrowserWindow, ipcMain, screen } = require("electron");
+const { app, BrowserWindow, ipcMain, globalShortcut, screen } = require("electron");
 const os = require("os");
 const path = require("path");
 const fs = require("fs");
 const screenshot = require("screenshot-desktop");
+
+
+const mouse_mode_key_biding = 'Command+S'
+const draw_mode_key_biding = 'Command+A'
 
 function createWindow() {
 	const board = new BrowserWindow({
@@ -140,9 +144,18 @@ function createWindow() {
 	ipcMain.on("eraserMode", () => {
 		board.webContents.send("eraserMode");
 	});
+
+    // Here is normal mouse - assign shortcut 
 	ipcMain.on("setMode", (e, arg) => {
 		board.webContents.send("setMode", arg);
+        // console.log('mouse')
 	});
+
+    // mouse mode shrtcut
+    globalShortcut.register(mouse_mode_key_biding, () =>{
+        board.webContents.send("setMode", arg);
+        console.log('mouse')
+    })
 
 	ipcMain.on("textMode", () => {
 		board.webContents.send("textMode");
@@ -192,9 +205,17 @@ function createWindow() {
 	ipcMain.on("drawStar", () => {
 		board.webContents.send("drawStar");
 	});
+    // Here is the listner for pressing on free hand -- put keybord shortcut here
 	ipcMain.on("drawFreehand", () => {
 		board.webContents.send("drawFreehand");
+        console.log('drawing')
 	});
+
+    // drawing shortcut
+    globalShortcut.register(draw_mode_key_biding, () =>{
+        board.webContents.send("drawFreehand");
+        // console.log('drawing')
+    })
 
 	ipcMain.on("dragMode", () => {
 		board.webContents.send("setMode", "drag");

@@ -11,7 +11,7 @@ const undo_mode_key_biding = 'Command+D'
 const format_mode_key_biding = 'Command+F'
 const strok_up_mode_key_biding = 'Command+UP'
 const strok_down_mode_key_biding = 'Command+DOWN'
-const close_mode_key_biding = 'Command+P'
+const close_mode_key_biding = 'Alt+P'
 
 
 function createWindow() {

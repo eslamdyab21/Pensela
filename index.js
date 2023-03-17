@@ -12,6 +12,14 @@ const format_mode_key_biding = 'Command+F'
 const strok_up_mode_key_biding = 'Command+UP'
 const strok_down_mode_key_biding = 'Command+DOWN'
 const close_mode_key_biding = 'Alt+P'
+const toggle_vis_mode_key_biding = 'Alt+R'
+const move_win_up_mode_key_biding = 'Alt+UP'
+const move_win_down_mode_key_biding = 'Alt+DOWN'
+
+let toggle = true
+const pos_x = 2203
+const pos_y = -20
+let pos_diff = 0
 
 
 function createWindow() {
@@ -37,13 +45,12 @@ function createWindow() {
 			contextIsolation: false,
 		},
 		transparent: true,
-		frame: false,
+		frame: true,
 		icon: path.join(__dirname, "/assets/Icon-512x512.png"),
 	});
 	board.setAlwaysOnTop(true, "screen");
 	board.loadFile("board.html");
 	board.setResizable(true);
-
 	setTimeout(() => {
 		board.setSize(
 			Math.max(
@@ -65,10 +72,10 @@ function createWindow() {
 
 	const controller = new BrowserWindow({
 		width: Math.floor(
-			screen.getPrimaryDisplay().size.width * (1350 / 1920)
+			screen.getPrimaryDisplay().size.width * (1350 / 1920)*0.4
 		),
 		height: Math.floor(
-			(((screen.getPrimaryDisplay().size.width * 1350) / 1920) * 1) / 11
+			((((screen.getPrimaryDisplay().size.width * 1350) / 1920) * 1) / 11)*0.4
 		),
 		webPreferences: {
 			nodeIntegration: true,
@@ -81,10 +88,10 @@ function createWindow() {
 		parent: board,
 		icon: "./assets/logo.png",
 	});
-	controller.setPosition(205, 40);
+	controller.setPosition(pos_x, pos_y);
 	controller.setAlwaysOnTop(true, "screen");
 	controller.loadFile("controller.html");
-	controller.setResizable(false);
+	controller.setResizable(true);
 
 	function openPicker(x, y) {
 		const picker = new BrowserWindow({
@@ -126,7 +133,7 @@ function createWindow() {
 			parent: board,
 			icon: "./assets/logo.png",
 		});
-		dialog.setPosition(x, y);
+		dialog.setPosition(250, y);
 		dialog.setAlwaysOnTop(true, "screen");
 		dialog.loadFile("background.html");
 		dialog.setResizable(false);
@@ -237,12 +244,15 @@ function createWindow() {
 
 	ipcMain.on("hideBoard", () => {
 		board.hide();
-		controller.setAlwaysOnTop(true, "screen");
+		// controller.setAlwaysOnTop(true, "screen");
 	});
 	ipcMain.on("showBoard", () => {
 		board.show();
 		controller.hide();
 		controller.show();
+        controller.setPosition(pos_x, pos_y+pos_diff);
+        board.webContents.send("clearBoard");
+        console.log('clearing')
 	});
 
 	ipcMain.on("minimizeWin", () => {
@@ -344,6 +354,38 @@ function createWindow() {
     globalShortcut.register(strok_down_mode_key_biding, () =>{
         board.webContents.send("strokeDecrease");
         console.log('strokeDecrease')
+    })
+
+    // Toggle visabilty shortcut
+    globalShortcut.register(toggle_vis_mode_key_biding, () =>{
+        if (toggle){
+            board.hide();
+		    // controller.setAlwaysOnTop(true, "screen");
+            toggle = false
+        }
+        else{
+            board.show();
+            controller.hide();
+            controller.show();
+            controller.setPosition(pos_x, pos_y+pos_diff);
+            board.webContents.send("clearBoard");
+            console.log('clearing')
+            console.log('Toggle-visabilty')
+            toggle = true
+        }
+
+        
+    })
+
+    globalShortcut.register(move_win_up_mode_key_biding, () =>{
+        pos_diff = pos_diff - 1
+        controller.setPosition(pos_x, pos_y+pos_diff);
+        console.log('move-window-up')
+    })
+    globalShortcut.register(move_win_down_mode_key_biding, () =>{
+        pos_diff = pos_diff + 1
+        controller.setPosition(pos_x, pos_y+pos_diff);
+        console.log('move-window-down')
     })
 
 	ipcMain.on("arrowSingle", () => board.webContents.send("arrowSingle"));

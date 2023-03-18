@@ -371,6 +371,11 @@ function createWindow() {
             board.webContents.send("clearBoard");
             console.log('clearing')
             console.log('Toggle-visabilty')
+
+            // draw after restart
+            board.webContents.send("drawFreehand");
+            console.log('drawing')
+
             toggle = true
         }
 
@@ -410,7 +415,7 @@ app.disableHardwareAcceleration();
 
 app.whenReady().then(() => {
     // createWindow()
-	os.platform() == "linux" ? setTimeout(createWindow, 100) : createWindow();
+	os.platform() == "linux" ? setTimeout(createWindow, 200) : createWindow();
 });
 
 // app.on("activate", () => {

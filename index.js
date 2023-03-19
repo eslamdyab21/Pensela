@@ -47,10 +47,12 @@ function createWindow() {
 		transparent: true,
 		frame: true,
 		icon: path.join(__dirname, "/assets/Icon-512x512.png"),
+        autoHideMenuBar: true,
 	});
 	board.setAlwaysOnTop(true, "screen");
 	board.loadFile("board.html");
 	board.setResizable(true);
+    
 	setTimeout(() => {
 		board.setSize(
 			Math.max(

@@ -49,7 +49,7 @@ function createWindow() {
 		icon: path.join(__dirname, "/assets/Icon-512x512.png"),
         autoHideMenuBar: true,
 	});
-	board.setAlwaysOnTop(true, "screen");
+	board.setAlwaysOnTop(false, "screen");
 	board.loadFile("board.html");
 	board.setResizable(true);
     

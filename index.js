@@ -5,16 +5,17 @@ const fs = require("fs");
 const screenshot = require("screenshot-desktop");
 
 // Key bindings
-const mouse_mode_key_biding = 'Command+S'
-const draw_mode_key_biding = 'Command+A'
-const undo_mode_key_biding = 'Command+D'
-const format_mode_key_biding = 'Command+F'
-const strok_up_mode_key_biding = 'Command+UP'
-const strok_down_mode_key_biding = 'Command+DOWN'
+const mouse_mode_key_biding = 'Alt+S'
+const draw_mode_key_biding = 'Alt+A'
+const undo_mode_key_biding = 'Alt+D'
+const format_mode_key_biding = 'Alt+F'
+const strok_up_mode_key_biding = 'Alt+UP'
+const strok_down_mode_key_biding = 'Alt+DOWN'
 const close_mode_key_biding = 'Alt+P'
 const toggle_vis_mode_key_biding = 'Alt+R'
 const move_win_up_mode_key_biding = 'Alt+UP'
 const move_win_down_mode_key_biding = 'Alt+DOWN'
+const eraser_mode_key_biding = 'Alt+E'
 
 let toggle = true
 const pos_x = 2203
@@ -165,6 +166,11 @@ function createWindow() {
 	ipcMain.on("eraserMode", () => {
 		board.webContents.send("eraserMode");
 	});
+
+	globalShortcut.register(eraser_mode_key_biding, () =>{
+        board.webContents.send("eraserMode");
+        console.log('eraser')
+    })
 
     // Here is normal mouse - assign shortcut 
 	ipcMain.on("setMode", (e, arg) => {
